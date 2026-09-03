@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Electricity.Bill</title>
+    <link rel="stylesheet" href="./src/output.css" />
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.0/css/all.min.css"
+    />
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- header -->
+    <!-- HEADER -->
+    <header
+      class="fixed top-0 left-0 z-20 w-full h-[72px] flex items-center justify-between px-5 sm:px-8 lg:px-12 bg-gradient-to-r from-rose-100/90 to-teal-100/90 dark:from-slate-900/95 dark:to-neutral-900/95 backdrop-blur-md border-b border-black/10 dark:border-white/10"
+    >
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div
+          class="w-10 h-10 rounded-xl flex items-center justify-center bg-black text-white dark:bg-rose-200 dark:text-zinc-900 shadow-sm"
+        >
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+
+        <h1
+          class="text-2xl sm:text-3xl font-oswald font-bold text-neutral-900 dark:text-rose-200 hidden sm:flex"
+        >
+          Electricity<span class="text-rose-600 dark:text-teal-300">.Bill</span>
+        </h1>
+      </div>
+
+      <!-- Right -->
+      <!-- Right -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Theme -->
+        <button
+          class="change-theme w-10 h-10 flex items-center justify-center border border-black/20 dark:border-white/20 text-neutral-800 dark:text-rose-200 rounded-full cursor-pointer hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300"
+        >
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Add Bill -->
+        <button
+          class="add-bill px-4 py-2.5 flex items-center gap-2 bg-[#1C1A17] dark:bg-rose-200 text-white dark:text-zinc-900 rounded-xl text-sm font-semibold shadow-md hover:scale-[1.03] active:scale-95 transition-all duration-300"
+        >
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Add Bill</span>
+        </button>
+
+        <!-- Desktop Backup -->
+        <button
+          class="backup-btn hidden sm:flex px-4 py-2.5 items-center gap-2 bg-green-600 text-white rounded-xl text-sm font-semibold"
+        >
+          <i class="fa-solid fa-download text-xs"></i>
+          <span>Backup</span>
+        </button>
+
+        <!-- Desktop Restore -->
+        <button
+          class="restore-btn hidden sm:flex px-4 py-2.5 items-center gap-2 bg-blue-600 text-white rounded-xl text-sm font-semibold"
+        >
+          <i class="fa-solid fa-upload text-xs"></i>
+          <span>Restore</span>
+        </button>
+
+        <!-- Mobile Menu Button -->
+        <button
+          class="mobile-menu-btn sm:hidden w-10 h-10 flex items-center justify-center border border-black/20 dark:border-white/20 text-neutral-800 dark:text-rose-200 rounded-xl hover:bg-black/5 dark:hover:bg-white/10 transition-all duration-300"
+        >
+          <i class="fa-solid fa-ellipsis"></i>
+        </button>
+
+        <!-- Mobile Menu -->
+        <div
+          class="mobile-menu hidden absolute right-4 top-[64px] w-44 p-2 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 rounded-2xl shadow-xl"
+        >
+          <button
+            class="backup-btn w-full px-4 py-3 flex items-center gap-3 text-left text-sm font-semibold text-neutral-700 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl"
+          >
+            <i class="fa-solid fa-download text-green-600"></i>
+            <span>Backup</span>
+          </button>
+
+          <button
+            class="restore-btn w-full px-4 py-3 flex items-center gap-3 text-left text-sm font-semibold text-neutral-700 dark:text-neutral-200 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-xl"
+          >
+            <i class="fa-solid fa-upload text-blue-600"></i>
+            <span>Restore</span>
+          </button>
+        </div>
+
+        <input type="file" class="restore-file hidden" accept=".json" />
+      </div>
+    </header>
+    <!-- hero ====================================== -->
+    <main
+      class="bg-gradient-to-r from-rose-100 to-teal-100 dark:bg-gradient-to-r dark:from-slate-900 dark:to-neutral-900 min-h-screen pt-18"
+    >
+      <!-- HERO -->
+      <section
+        class="min-h-[calc(100vh-72px)] flex items-center px-6 sm:px-10 lg:px-16 py-16"
+      >
+        <div
+          class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center"
+        >
+          <!-- LEFT: TEXT -->
+          <div class="hero-text">
+            <!-- Developer -->
+            <p
+              class="hero-developer text-xs sm:text-sm font-semibold tracking-[0.3em] uppercase text-rose-700 dark:text-rose-300 opacity-0"
+            >
+              Developer — Waris Mandozai
+            </p>
+
+            <!-- Animated Title -->
+            <h1
+              class="mt-5 font-oswald font-bold text-5xl sm:text-6xl lg:text-7xl leading-[1.05] text-neutral-900 dark:text-rose-100"
+            >
+              <span class="hero-title-line block overflow-hidden">
+                <span class="hero-title-word inline-block">
+                  From Paper Bills
+                </span>
+              </span>
+
+              <span class="hero-title-line block overflow-hidden mt-2">
+                <span
+                  class="hero-title-word inline-block bg-gradient-to-r from-rose-600 to-teal-600 dark:from-rose-300 dark:to-teal-300 bg-clip-text text-transparent"
+                >
+                  to a Digital System
+                </span>
+              </span>
+            </h1>
+
+            <!-- Description -->
+            <p
+              class="hero-description mt-7 max-w-xl text-base sm:text-lg leading-8 text-neutral-600 dark:text-zinc-400 opacity-0"
+            >
+              I used to manage our electricity bills on paper — writing down the
+              units, calculating everyone's share, and keeping track of
+              everything manually.
+              <br /><br />
+              So I built this simple system to bring it all together in one
+              organized place.
+            </p>
+          </div>
+
+          <!-- RIGHT: IMAGE -->
+          <div
+            class="hero-image relative flex justify-center lg:justify-end opacity-0"
+          >
+            <div
+              class="relative w-full max-w-lg h-[360px] sm:h-[400px] lg:h-[430px] rounded-[3rem] overflow-hidden bg-white/60 dark:bg-zinc-900/60 border border-white/70 dark:border-zinc-700 shadow-2xl backdrop-blur-sm"
+            >
+              <div
+                class="relative w-full max-w-lg h-[360px] sm:h-[400px] lg:h-[430px]"
+              >
+                <!-- Light mode image -->
+                <img
+                  src="./assets/hero light.png"
+                  alt="Electricity bill changing from paper to digital"
+                  class="w-full h-full object-cover dark:hidden"
+                />
+
+                <!-- Dark mode image -->
+                <img
+                  src="./assets/hero dark.png"
+                  alt="Electricity bill changing from paper to digital"
+                  class="hidden w-full h-full object-cover dark:block"
+                />
+              </div>
+
+              <!-- Decorative glow -->
+              <div
+                class="absolute -top-20 -right-20 w-48 h-48 bg-rose-400/20 dark:bg-rose-300/10 rounded-full blur-3xl"
+              ></div>
+
+              <div
+                class="absolute -bottom-20 -left-20 w-48 h-48 bg-teal-400/20 dark:bg-teal-300/10 rounded-full blur-3xl"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- BILLS SECTION -->
+      <section class="px-6 sm:px-10 lg:px-16 py-20">
+        <div class="max-w-7xl mx-auto">
+          <!-- Cards Section Title -->
+          <div class="text-center mb-10">
+            <p
+              class="text-xs font-bold tracking-[0.3em] uppercase text-rose-600 dark:text-rose-300"
+            >
+              Your Records
+            </p>
+
+            <h2
+              class="mt-3 font-oswald text-4xl sm:text-5xl font-bold text-neutral-900 dark:text-rose-100"
+            >
+              Electricity Bills
+            </h2>
+
+            <p
+              class="mt-4 text-sm sm:text-base text-neutral-600 dark:text-zinc-400"
+            >
+              View and manage all your saved electricity bills.
+            </p>
+          </div>
+
+          <!-- No Bills Message -->
+          <div class="no-bill text-center py-20">
+            <div
+              class="mx-auto w-16 h-16 mb-5 flex items-center justify-center rounded-2xl bg-rose-100 dark:bg-rose-950/50 text-rose-500 dark:text-rose-300 text-2xl"
+            >
+              <i class="fa-solid fa-file-invoice"></i>
+            </div>
+
+            <h3
+              class="font-oswald text-3xl sm:text-4xl text-neutral-400 dark:text-rose-200"
+            >
+              No bills yet
+            </h3>
+
+            <p class="mt-2 text-sm text-neutral-400 dark:text-zinc-500">
+              Add your first electricity bill to see it here.
+            </p>
+          </div>
+
+          <!-- Cards Container -->
+          <div
+            class="cards-container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          ></div>
+        </div>
+      </section>
+      <!-- HOW IT WORKS + CONTACT -->
+      <section
+        id="how-it-works"
+        class="px-6 sm:px-10 lg:px-16 py-24 bg-gradient-to-r from-rose-100 to-teal-100 dark:from-slate-900 dark:to-neutral-900"
+      >
+        <div class="max-w-7xl mx-auto">
+          <!-- Section Header -->
+          <div class="text-center max-w-2xl mx-auto mb-14">
+            <p
+              class="text-xs font-bold tracking-[0.3em] uppercase text-rose-600 dark:text-rose-300"
+            >
+              Simple & Organized
+            </p>
+
+            <h2
+              class="mt-3 font-oswald text-4xl sm:text-5xl font-bold text-neutral-900 dark:text-rose-100"
+            >
+              How Electricity.Bill Works
+            </h2>
+
+            <p
+              class="mt-5 text-sm sm:text-base leading-7 text-neutral-600 dark:text-zinc-400"
+            >
+              Manage electricity bills, calculate everyone's share, and keep
+              your records organized in one simple place.
+            </p>
+          </div>
+
+          <!-- Steps -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Step 1 -->
+            <div
+              class="group p-6 sm:p-7 rounded-3xl bg-white/70 dark:bg-zinc-900/70 border border-white dark:border-zinc-800 shadow-lg backdrop-blur-sm hover:-translate-y-2 transition-all duration-300"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center bg-rose-100 dark:bg-rose-950/50 text-rose-600 dark:text-rose-300 text-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <i class="fa-solid fa-file-circle-plus"></i>
+              </div>
+
+              <span
+                class="block mt-6 text-xs font-bold tracking-widest uppercase text-neutral-400 dark:text-zinc-500"
+              >
+                Step 01
+              </span>
+
+              <h3
+                class="mt-2 text-xl font-bold text-neutral-800 dark:text-neutral-100"
+              >
+                Add Your Bill
+              </h3>
+
+              <p
+                class="mt-3 text-sm leading-6 text-neutral-500 dark:text-zinc-400"
+              >
+                Enter the bill date, month, total amount, and the electricity
+                units used by each person.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div
+              class="group p-6 sm:p-7 rounded-3xl bg-white/70 dark:bg-zinc-900/70 border border-white dark:border-zinc-800 shadow-lg backdrop-blur-sm hover:-translate-y-2 transition-all duration-300"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center bg-teal-100 dark:bg-teal-950/50 text-teal-600 dark:text-teal-300 text-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <i class="fa-solid fa-calculator"></i>
+              </div>
+
+              <span
+                class="block mt-6 text-xs font-bold tracking-widest uppercase text-neutral-400 dark:text-zinc-500"
+              >
+                Step 02
+              </span>
+
+              <h3
+                class="mt-2 text-xl font-bold text-neutral-800 dark:text-neutral-100"
+              >
+                Automatic Calculation
+              </h3>
+
+              <p
+                class="mt-3 text-sm leading-6 text-neutral-500 dark:text-zinc-400"
+              >
+                The system calculates the cost per unit and automatically
+                determines how much each person needs to pay.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div
+              class="group p-6 sm:p-7 rounded-3xl bg-white/70 dark:bg-zinc-900/70 border border-white dark:border-zinc-800 shadow-lg backdrop-blur-sm hover:-translate-y-2 transition-all duration-300"
+            >
+              <div
+                class="w-12 h-12 rounded-2xl flex items-center justify-center bg-amber-100 dark:bg-amber-950/50 text-amber-600 dark:text-amber-300 text-lg group-hover:scale-110 transition-transform duration-300"
+              >
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+
+              <span
+                class="block mt-6 text-xs font-bold tracking-widest uppercase text-neutral-400 dark:text-zinc-500"
+              >
+                Step 03
+              </span>
+
+              <h3
+                class="mt-2 text-xl font-bold text-neutral-800 dark:text-neutral-100"
+              >
+                Keep Everything Organized
+              </h3>
+
+              <p
+                class="mt-3 text-sm leading-6 text-neutral-500 dark:text-zinc-400"
+              >
+                Every bill is saved as a card so you can easily review, delete,
+                backup, or restore your records whenever you need them.
+              </p>
+            </div>
+          </div>
+
+          <!-- Contact -->
+          <div
+            class="mt-20 relative overflow-hidden rounded-[2rem] bg-[#1C1A17] dark:bg-rose-100 p-8 sm:p-10 lg:p-12 shadow-2xl"
+          >
+            <!-- Decorative circles -->
+            <div
+              class="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-rose-500/20 dark:bg-rose-500/10 blur-3xl"
+            ></div>
+
+            <div
+              class="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-teal-500/20 dark:bg-teal-500/10 blur-3xl"
+            ></div>
+
+            <div
+              class="relative grid grid-cols-1 lg:grid-cols-2 gap-10 items-center"
+            >
+              <!-- Contact Text -->
+              <div>
+                <p
+                  class="text-xs font-bold tracking-[0.3em] uppercase text-rose-300 dark:text-rose-600"
+                >
+                  Get In Touch
+                </p>
+
+                <h2
+                  class="mt-3 font-oswald text-4xl sm:text-5xl font-bold text-white dark:text-neutral-900"
+                >
+                  Have a question?
+                </h2>
+
+                <p
+                  class="mt-5 max-w-lg text-sm sm:text-base leading-7 text-neutral-300 dark:text-neutral-600"
+                >
+                  If you have a suggestion, found a problem, or simply want to
+                  get in touch, feel free to contact me.
+                </p>
+              </div>
+
+              <!-- Contact Cards -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Email -->
+                <a
+                  href="mailto:warismandozai0@gmail.com"
+                  class="group p-5 rounded-2xl bg-white/10 dark:bg-black/5 border border-white/10 dark:border-black/10 hover:bg-white/15 dark:hover:bg-black/10 transition-all duration-300"
+                >
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center bg-rose-500/20 dark:bg-rose-500/10 text-rose-300 dark:text-rose-600"
+                  >
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+
+                  <h3
+                    class="mt-4 font-semibold text-white dark:text-neutral-900"
+                  >
+                    Email
+                  </h3>
+
+                  <p
+                    class="mt-1 text-xs text-neutral-400 dark:text-neutral-500 break-all"
+                  >
+                    warismandozai0@gmail.com
+                  </p>
+                </a>
+
+                <!-- Developer -->
+                <div
+                  class="p-5 rounded-2xl bg-white/10 dark:bg-black/5 border border-white/10 dark:border-black/10"
+                >
+                  <div
+                    class="w-10 h-10 rounded-xl flex items-center justify-center bg-teal-500/20 dark:bg-teal-500/10 text-teal-300 dark:text-teal-600"
+                  >
+                    <i class="fa-solid fa-code"></i>
+                  </div>
+
+                  <h3
+                    class="mt-4 font-semibold text-white dark:text-neutral-900"
+                  >
+                    Developer
+                  </h3>
+
+                  <p
+                    class="mt-1 text-xs text-neutral-400 dark:text-neutral-500"
+                  >
+                    Waris Mandozai
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom -->
+          <div
+            class="mt-10 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-neutral-500 dark:text-zinc-500"
+          >
+            <p>© 2026 Electricity.Bill</p>
+
+            <p>Built to make electricity billing easier.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- password for add bill -->
+      <!-- Password Modal -->
+      <div
+        class="password-modal fixed inset-0 z-30 flex items-center justify-center bg-black/70 opacity-0 invisible transition-all duration-300"
+      >
+        <div
+          class="password-box w-[calc(100%-2rem)] max-w-sm bg-white dark:bg-zinc-900 border border-rose-100 dark:border-zinc-700 rounded-3xl p-6 shadow-2xl scale-90 transition-all duration-300"
+        >
+          <!-- Icon -->
+          <div
+            class="mx-auto mb-4 w-12 h-12 flex items-center justify-center rounded-2xl bg-rose-100 dark:bg-rose-950 text-rose-600 dark:text-rose-300"
+          >
+            <i class="fa-solid fa-lock"></i>
+          </div>
+
+          <!-- Title -->
+          <div class="text-center mb-5">
+            <h2
+              class="text-xl font-bold text-neutral-800 dark:text-neutral-200"
+            >
+              Enter Password
+            </h2>
+
+            <p class="text-sm text-neutral-500 dark:text-zinc-400 mt-1">
+              <span class="password-message"
+                >Enter the password to add a new bill.</span
+              >
+            </p>
+          </div>
+
+          <!-- Password -->
+          <div class="relative">
+            <input
+              type="password"
+              class="bill-password w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+              placeholder="Enter password"
+            />
+
+            <!-- Show / Hide password -->
+            <button
+              type="button"
+              class="show-password absolute right-4 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-rose-500 transition"
+            >
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+
+          <!-- Error -->
+          <p class="password-error text-red-500 text-xs mt-2 hidden">
+            Incorrect password!
+          </p>
+
+          <!-- Buttons -->
+          <div class="grid grid-cols-2 gap-3 mt-5">
+            <button
+              type="button"
+              class="cancel-password py-3 rounded-xl border border-gray-200 dark:border-zinc-700 text-neutral-600 dark:text-zinc-300 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-zinc-800 transition"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="button"
+              class="confirm-password py-3 rounded-xl bg-[#1C1A17] dark:bg-rose-200 text-white dark:text-zinc-900 text-sm font-bold hover:bg-neutral-800 dark:hover:bg-rose-300 transition"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-parent">
+        <div
+          class="overlay fixed inset-0 bg-black/80 opacity-0 invisible transition-all duration-300 z-[40]"
+        ></div>
+        <form
+          class="add-bill-form w-[92%] max-w-2xl p-5 sm:p-6 bg-white dark:bg-zinc-900 border border-rose-100 dark:border-zinc-700 rounded-3xl shadow-2xl fixed top-4 bottom-4 left-1/2 -translate-x-1/2 z-[50] space-y-4 opacity-0 invisible scale-90 transition-all duration-300 w-[calc(100%-2rem)] overflow-y-auto"
+        >
+          <!-- Header -->
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h2
+                class="text-2xl sm:text-3xl font-oswald font-bold text-neutral-800 dark:text-rose-200"
+              >
+                Add New Bill
+              </h2>
+
+              <p class="text-sm text-neutral-500 dark:text-zinc-400 mt-1">
+                Enter the bill information and units.
+              </p>
+            </div>
+
+            <!-- Close -->
+            <button
+              type="button"
+              class="close-form-2 w-9 h-9 shrink-0 flex items-center justify-center rounded-full border border-rose-200 dark:border-zinc-700 text-neutral-500 dark:text-zinc-400 hover:bg-rose-50 dark:hover:bg-zinc-800 hover:text-rose-600 dark:hover:text-rose-200 transition"
+            >
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px bg-gray-100 dark:bg-zinc-800"></div>
+
+          <!-- Date / Month / Amount -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Date -->
+            <div>
+              <label
+                class="block text-[11px] font-bold tracking-wider uppercase text-neutral-500 dark:text-zinc-400 mb-2"
+              >
+                Afghan Date
+              </label>
+
+              <input
+                type="text"
+                class="input-date w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                placeholder="1405/06/05"
+              />
+            </div>
+
+            <!-- Month -->
+            <div>
+              <label
+                class="block text-[11px] font-bold tracking-wider uppercase text-neutral-500 dark:text-zinc-400 mb-2"
+              >
+                Month
+              </label>
+
+              <select
+                class="input-month w-full px-4 py-2.5 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-sm text-neutral-800 dark:text-neutral-200 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+              >
+                <option value="" disabled selected>Select month</option>
+
+                <option value="Hamal">Hamal</option>
+                <option value="Sawr">Sawr</option>
+                <option value="Jawza">Jawza</option>
+                <option value="Saratan">Saratan</option>
+                <option value="Asad">Asad</option>
+                <option value="Sunbula">Sunbula</option>
+                <option value="Mizan">Mizan</option>
+                <option value="Aqrab">Aqrab</option>
+                <option value="Qaws">Qaws</option>
+                <option value="Jadi">Jadi</option>
+                <option value="Dalwa">Dalwa</option>
+                <option value="Hut">Hut</option>
+              </select>
+            </div>
+
+            <!-- Amount -->
+            <div>
+              <label
+                class="block text-[11px] font-bold tracking-wider uppercase text-neutral-500 dark:text-zinc-400 mb-2"
+              >
+                Total Amount
+              </label>
+
+              <div class="relative">
+                <input
+                  type="number"
+                  placeholder="Enter amount"
+                  class="input-amount w-full px-4 py-3 pr-14 rounded-xl border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                />
+
+                <span
+                  class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-1.5 py-1 rounded"
+                >
+                  AFS
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Units Section -->
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3
+                  class="text-lg font-bold text-neutral-800 dark:text-neutral-200"
+                >
+                  Units
+                </h3>
+
+                <p class="text-xs text-neutral-400 dark:text-zinc-500">
+                  Enter the units for each person.
+                </p>
+              </div>
+
+              <span
+                class="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-1 rounded-lg"
+              >
+                4 People
+              </span>
+            </div>
+
+            <!-- People -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Zazai -->
+              <div
+                class="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 transition hover:border-rose-200 dark:hover:border-zinc-600"
+              >
+                <label
+                  class="block text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-2"
+                >
+                  Zazai
+                </label>
+
+                <input
+                  type="number"
+                  placeholder="Enter units"
+                  class="input-zazai w-full px-4 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                />
+              </div>
+
+              <!-- Said Karam -->
+              <div
+                class="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 transition hover:border-rose-200 dark:hover:border-zinc-600"
+              >
+                <label
+                  class="block text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-2"
+                >
+                  Said Karam
+                </label>
+
+                <input
+                  type="number"
+                  placeholder="Enter units"
+                  class="input-karam w-full px-4 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                />
+              </div>
+
+              <!-- Muhibullah -->
+              <div
+                class="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 transition hover:border-rose-200 dark:hover:border-zinc-600"
+              >
+                <label
+                  class="block text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-2"
+                >
+                  Muhibullah
+                </label>
+
+                <input
+                  type="number"
+                  placeholder="Enter units"
+                  class="input-muhib w-full px-4 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                />
+              </div>
+
+              <!-- Jawad -->
+              <div
+                class="p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800 border border-gray-100 dark:border-zinc-700 transition hover:border-rose-200 dark:hover:border-zinc-600"
+              >
+                <label
+                  class="block text-sm font-semibold text-neutral-700 dark:text-neutral-200 mb-2"
+                >
+                  Jawad
+                </label>
+
+                <input
+                  type="number"
+                  placeholder="Enter units"
+                  class="input-jawad w-full px-4 py-3 rounded-xl bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-700 text-sm text-neutral-800 dark:text-neutral-200 placeholder:text-neutral-400 dark:placeholder:text-zinc-500 outline-none focus:border-rose-400 dark:focus:border-rose-300 focus:ring-2 focus:ring-rose-100 dark:focus:ring-rose-950 transition"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Divider -->
+          <div class="h-px bg-gray-100 dark:bg-zinc-800"></div>
+
+          <!-- Buttons -->
+          <div class="grid grid-cols-3 gap-3">
+            <!-- Cancel -->
+            <button
+              type="button"
+              class="close-form py-3 rounded-xl border border-gray-200 dark:border-zinc-700 text-neutral-600 dark:text-zinc-300 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-zinc-800 transition"
+            >
+              Cancel
+            </button>
+
+            <!-- Reset -->
+            <button
+              type="reset"
+              class="py-3 rounded-xl border border-gray-200 dark:border-zinc-700 text-neutral-600 dark:text-zinc-300 text-sm font-semibold hover:bg-gray-50 dark:hover:bg-zinc-800 transition"
+            >
+              Reset
+            </button>
+
+            <!-- add card -->
+            <button
+              type="button"
+              class="add-card-btn py-3 rounded-xl bg-[#1C1A17] dark:bg-rose-200 text-white dark:text-zinc-900 text-sm font-bold hover:bg-neutral-800 dark:hover:bg-rose-300 active:scale-[0.98] transition-all shadow-lg"
+            >
+              Add Card
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <script src="./js/main.js"></script>
+  </body>
+</html>

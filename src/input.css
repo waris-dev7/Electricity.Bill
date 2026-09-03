@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --font-oswald: "Oswald", sans-serif;
+  --font-poppins: "Poppins", sans-serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Hero animations */
+
+@keyframes heroTitle {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes heroFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes heroImage {
+  from {
+    opacity: 0;
+    transform: translateX(50px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.hero-title-word {
+  animation: heroTitle 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  opacity: 0;
+}
+
+.hero-title-line:nth-child(1) .hero-title-word {
+  animation-delay: 0.2s;
+}
+
+.hero-title-line:nth-child(2) .hero-title-word {
+  animation-delay: 0.4s;
+}
+
+.hero-developer {
+  animation: heroFade 0.7s ease forwards;
+  animation-delay: 0.05s;
+}
+
+.hero-description {
+  animation: heroFade 0.8s ease forwards;
+  animation-delay: 0.8s;
+}
+
+.hero-image {
+  animation: heroImage 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.5s;
+}
+
+button {
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+}
+
+button:active {
+  scale: 0.8;
+}
