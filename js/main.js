@@ -45,7 +45,7 @@ const cancelPassword = document.querySelector(".cancel-password");
 const passwordError = document.querySelector(".password-error");
 const showPassword = document.querySelector(".show-password");
 
-const correctPassword = "waris";
+const correctPassword = "warismandozai";
 
 addBillBtn.addEventListener("click", () => {
   // Make sure this password request is for ADDING a bill
@@ -69,16 +69,13 @@ confirmPassword.addEventListener("click", () => {
   if (billPassword.value === correctPassword) {
     // ================= DELETE BILL =================
     if (deleteCard) {
-      const cards = [...cardsContainer.querySelectorAll(".card")];
-      const cardIndex = cards.indexOf(deleteCard);
+      const billId = deleteCard.dataset.id;
 
-      if (cardIndex !== -1) {
-        bills.splice(cardIndex, 1);
+      bills = bills.filter((bill) => bill.id !== billId);
 
-        localStorage.setItem("bills", JSON.stringify(bills));
+      localStorage.setItem("bills", JSON.stringify(bills));
 
-        deleteCard.remove();
-      }
+      deleteCard.remove();
 
       if (bills.length === 0) {
         noBill.classList.remove("hidden");
@@ -175,6 +172,70 @@ const noBill = document.querySelector(".no-bill");
 
 let bills = JSON.parse(localStorage.getItem("bills")) || [];
 
+// Give old bills IDs
+bills = bills.map((bill, index) => {
+  if (!bill.id) {
+    bill.id = `BILL-${String(index + 1).padStart(3, "0")}`;
+  }
+
+  if (bill.subtractFromId === undefined) {
+    bill.subtractFromId = null;
+  }
+  return bill;
+});
+
+localStorage.setItem("bills", JSON.stringify(bills));
+
+const calculationSourceInputs = document.querySelectorAll(
+  'input[name="calculation-source"]',
+);
+const subtractFromSelect = document.querySelector(".subtract-from-select");
+
+function getNextBillId() {
+  let highest = 0;
+
+  bills.forEach((bill) => {
+    if (bill.id) {
+      const number = parseInt(bill.id.replace("BILL-", ""), 10);
+
+      if (!isNaN(number)) {
+        highest = Math.max(highest, number);
+      }
+    }
+  });
+
+  return `BILL-${String(highest + 1).padStart(3, "0")}`;
+}
+
+function updateCardSelection() {
+  subtractFromSelect.innerHTML = '<option value="">Select a card</option>';
+
+  bills.forEach((bill) => {
+    const option = document.createElement("option");
+
+    option.value = bill.id;
+
+    option.textContent = `${bill.id} - ${bill.date} - ${bill.month}`;
+
+    subtractFromSelect.appendChild(option);
+  });
+}
+
+calculationSourceInputs.forEach((radio) => {
+  radio.addEventListener("change", () => {
+    if (radio.value === "selected" && radio.checked) {
+      updateCardSelection();
+
+      subtractFromSelect.classList.remove("hidden");
+      subtractFromSelect.disabled = false;
+    } else if (radio.value === "previous" && radio.checked) {
+      subtractFromSelect.classList.add("hidden");
+      subtractFromSelect.disabled = true;
+      subtractFromSelect.value = "";
+    }
+  });
+});
+
 addCardBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -197,36 +258,98 @@ addCardBtn.addEventListener("click", (e) => {
   const muhibAllUnits = Number(inputMuhib.value) || 0;
   const jawadAllUnits = Number(inputJawad.value) || 0;
 
-  // Get previous card
-  const previousBill = bills.length > 0 ? bills[bills.length - 1] : null;
+  // ================= CALCULATE FROM =================
 
-  const previousZazai = previousBill ? previousBill.zazaiAllUnits : 0;
-  const previousKaram = previousBill ? previousBill.karamAllUnits : 0;
-  const previousMuhib = previousBill ? previousBill.muhibAllUnits : 0;
-  const previousJawad = previousBill ? previousBill.jawadAllUnits : 0;
+  const selectedSource = document.querySelector(
+    'input[name="calculation-source"]:checked',
+  ).value;
+
+  let subtractFromBill = null;
+
+  if (selectedSource === "selected") {
+    const selectedId = subtractFromSelect.value;
+
+    if (!selectedId) {
+      alert("Please choose a card.");
+      return;
+    }
+
+    subtractFromBill = bills.find((bill) => bill.id === selectedId);
+
+    if (!subtractFromBill) {
+      alert("Selected bill could not be found.");
+      return;
+    }
+  } else {
+    // Previous Card
+    subtractFromBill = bills.length > 0 ? bills[bills.length - 1] : null;
+  }
+
+  // ================= PREVIOUS ALL UNITS =================
+
+  const previousZazai = subtractFromBill
+    ? Number(subtractFromBill.zazaiAllUnits) || 0
+    : 0;
+
+  const previousKaram = subtractFromBill
+    ? Number(subtractFromBill.karamAllUnits) || 0
+    : 0;
+
+  const previousMuhib = subtractFromBill
+    ? Number(subtractFromBill.muhibAllUnits) || 0
+    : 0;
+
+  const previousJawad = subtractFromBill
+    ? Number(subtractFromBill.jawadAllUnits) || 0
+    : 0;
+
+  // ================= CURRENT UNITS =================
 
   const zazaiUnits = Number((zazaiAllUnits - previousZazai).toFixed(2));
+
   const karamUnits = Number((karamAllUnits - previousKaram).toFixed(2));
+
   const muhibUnits = Number((muhibAllUnits - previousMuhib).toFixed(2));
+
   const jawadUnits = Number((jawadAllUnits - previousJawad).toFixed(2));
 
-  const totalAmount = Number(inputAmount.value) || 0;
+  // ================= VALIDATION =================
 
-  const totalUnits = zazaiUnits + karamUnits + muhibUnits + jawadUnits;
-
-  if (totalUnits === 0) {
-    alert("Please enter units.");
+  if (zazaiUnits < 0 || karamUnits < 0 || muhibUnits < 0 || jawadUnits < 0) {
+    alert(
+      "Current All Units cannot be less than the All Units from the selected card.",
+    );
     return;
   }
 
+  const totalAmount = Number(inputAmount.value) || 0;
+
+  if (totalAmount <= 0) {
+    alert("Please enter a valid total amount.");
+    return;
+  }
+
+  const totalUnits = zazaiUnits + karamUnits + muhibUnits + jawadUnits;
+
+  if (totalUnits <= 0) {
+    alert("Please enter valid units.");
+    return;
+  }
+
+  // ================= PRICE PER UNIT =================
+
   const pricePerUnit = totalAmount / totalUnits;
+
+  // ================= AMOUNTS =================
 
   const zazaiAmount = pricePerUnit * zazaiUnits;
   const karamAmount = pricePerUnit * karamUnits;
   const muhibAmount = pricePerUnit * muhibUnits;
   const jawadAmount = pricePerUnit * jawadUnits;
-
   const bill = {
+    id: getNextBillId(),
+
+    subtractFromId: subtractFromBill ? subtractFromBill.id : null,
     date: inputDate.value,
     month: inputMonth.value,
     amount: inputAmount.value,
@@ -250,8 +373,24 @@ addCardBtn.addEventListener("click", (e) => {
   bills.push(bill);
 
   localStorage.setItem("bills", JSON.stringify(bills));
+
+  inputDate.value = "";
+  inputMonth.value = "";
+  inputAmount.value = "";
+  inputZazai.value = "";
+  inputKaram.value = "";
+  inputMuhib.value = "";
+  inputJawad.value = "";
+
+  document.querySelector(
+    'input[name="calculation-source"][value="previous"]',
+  ).checked = true;
+
+  subtractFromSelect.value = "";
+  subtractFromSelect.classList.add("hidden");
+  subtractFromSelect.disabled = true;
   const card = `<div
-          class="card max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 shadow-xl overflow-hidden font-sans"
+         class="card max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 shadow-xl overflow-hidden font-sans" data-id="${bill.id}"
         >
           <div
             class="h-1.5 w-full bg-gradient-to-r from-lime-950 via-yellow-700 to-amber-200"
@@ -260,16 +399,21 @@ addCardBtn.addEventListener("click", (e) => {
             <div
               class="flex justify-between items-start text-[10px] font-semibold tracking-wider text-neutral-500 uppercase"
             >
-              <div>
-                <p>Bill Date</p>
-                <p
-                  class="text-neutral-700 dark:text-neutral-200 tracking-normal text-xs font-medium mt-0.5"
-                >
-                  ${inputDate.value}
-                </p>
-              </div>
-            </div>
+            <div>
+  <p>Bill Date</p>
 
+  <p class="text-neutral-700 dark:text-neutral-200 tracking-normal text-xs font-medium mt-0.5">
+    ${bill.date}
+  </p>
+</div>
+
+<span
+  class="text-[9px] font-bold tracking-wider text-rose-600 dark:text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg"
+>
+  ${bill.id}
+</span>
+
+</div>
             <div class="mt-4">
               <p
                 class="text-[10px] font-semibold tracking-wider text-neutral-500 uppercase"
@@ -279,7 +423,7 @@ addCardBtn.addEventListener("click", (e) => {
               <h2
                 class="text-xl font-bold text-neutral-800 dark:text-neutral-200 leading-tight"
               >
-                ${inputMonth.value}
+                ${bill.month}
               </h2>
             </div>
 
@@ -293,7 +437,7 @@ addCardBtn.addEventListener("click", (e) => {
               <div class="flex items-baseline gap-1">
                 <span
                   class="text-xl font-extrabold dark:text-zinc-900 tracking-tight"
-                  >${inputAmount.value}</span
+                  >${bill.amount}</span
                 >
                 <span
                   class="text-[10px] font-bold text-amber-500 dark:bg-amber-950 bg-amber-500/10 px-1.5 py-0.5 rounded"
@@ -399,20 +543,26 @@ bills.forEach((bill) => {
   const jawadAmount = bill.jawadAmount;
 
   const card = `<div 
-    class="card max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 shadow-xl overflow-hidden font-sans"
+    class="card max-w-sm bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 shadow-xl overflow-hidden font-sans" data-id="${bill.id}"
   >
     <div class="h-1.5 w-full bg-gradient-to-r from-lime-950 via-yellow-700 to-amber-200"></div>
 
     <div class="px-6 py-6">
 
       <div class="flex justify-between items-start text-[10px] font-semibold tracking-wider text-neutral-500 uppercase">
-        <div>
-          <p>Bill Date</p>
-          <p class="text-neutral-700 dark:text-neutral-200 tracking-normal text-xs font-medium mt-0.5">
-            ${bill.date}
-          </p>
-        </div>
-      </div>
+  <div>
+    <p>Bill Date</p>
+    <p class="text-neutral-700 dark:text-neutral-200 tracking-normal text-xs font-medium mt-0.5">
+      ${bill.date}
+    </p>
+  </div>
+
+  <span 
+    class="text-[9px] font-bold tracking-wider text-rose-600 dark:text-rose-300 bg-rose-500/10 px-2 py-1 rounded-lg"
+  >
+    ${bill.id}
+  </span>
+</div>
 
       <div class="mt-4">
         <p class="text-[10px] font-semibold tracking-wider text-neutral-500 uppercase">
