@@ -5,7 +5,6 @@ const passwordMessage = document.querySelector(".password-message");
 
 let deleteCard = null;
 
-// mobile menu
 const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
 const mobileMenu = document.querySelector(".mobile-menu");
 
@@ -13,7 +12,6 @@ mobileMenuBtn.addEventListener("click", () => {
   mobileMenu.classList.toggle("hidden");
 });
 
-// Load saved theme
 const savedTheme = localStorage.getItem("theme");
 
 if (savedTheme === "dark") {
@@ -27,10 +25,8 @@ changeThemeBtn.addEventListener("click", () => {
 
   const isDark = document.documentElement.classList.contains("dark");
 
-  // Save theme
   localStorage.setItem("theme", isDark ? "dark" : "light");
 
-  // Change icon
   themeIcon.classList.toggle("fa-moon", !isDark);
   themeIcon.classList.toggle("fa-sun", isDark);
 });
@@ -84,7 +80,6 @@ confirmPassword.addEventListener("click", () => {
         deleteCard.remove();
       }
 
-      // Show "No bills yet"
       if (bills.length === 0) {
         noBill.classList.remove("hidden");
       } else {
@@ -104,7 +99,6 @@ confirmPassword.addEventListener("click", () => {
       overlay.classList.add("opacity-100", "visible");
     }
 
-    // Close password modal
     passwordModal.classList.add("opacity-0", "invisible");
     passwordModal.classList.remove("opacity-100", "visible");
 
@@ -114,7 +108,6 @@ confirmPassword.addEventListener("click", () => {
     billPassword.value = "";
     passwordError.classList.add("hidden");
 
-    // Reset message
     passwordMessage.textContent = "Enter the password to add a new bill.";
   } else {
     passwordError.classList.remove("hidden");
@@ -131,11 +124,8 @@ cancelPassword.addEventListener("click", () => {
   billPassword.value = "";
   passwordError.classList.add("hidden");
 
-  // IMPORTANT:
-  // Cancel means we are no longer deleting a card
   deleteCard = null;
 
-  // Reset password message
   passwordMessage.textContent = "Enter the password to add a new bill.";
 });
 
@@ -210,14 +200,11 @@ addCardBtn.addEventListener("click", (e) => {
   // Get previous card
   const previousBill = bills.length > 0 ? bills[bills.length - 1] : null;
 
-  console.log(previousBill);
-  // Previous All Units, or 0 if there is no previous card
-  const previousZazai = previousBill ? previousBill.zazaiUnits : 0;
-  const previousKaram = previousBill ? previousBill.karamUnits : 0;
-  const previousMuhib = previousBill ? previousBill.muhibUnits : 0;
-  const previousJawad = previousBill ? previousBill.jawadUnits : 0;
+  const previousZazai = previousBill ? previousBill.zazaiAllUnits : 0;
+  const previousKaram = previousBill ? previousBill.karamAllUnits : 0;
+  const previousMuhib = previousBill ? previousBill.muhibAllUnits : 0;
+  const previousJawad = previousBill ? previousBill.jawadAllUnits : 0;
 
-  // Units = All Units - Previous All Units
   const zazaiUnits = Number((zazaiAllUnits - previousZazai).toFixed(2));
   const karamUnits = Number((karamAllUnits - previousKaram).toFixed(2));
   const muhibUnits = Number((muhibAllUnits - previousMuhib).toFixed(2));
@@ -225,19 +212,15 @@ addCardBtn.addEventListener("click", (e) => {
 
   const totalAmount = Number(inputAmount.value) || 0;
 
-  // Add all 4 units together
   const totalUnits = zazaiUnits + karamUnits + muhibUnits + jawadUnits;
 
-  // Prevent division by zero
   if (totalUnits === 0) {
     alert("Please enter units.");
     return;
   }
 
-  // Amount for 1 unit
   const pricePerUnit = totalAmount / totalUnits;
 
-  // Calculate each person's amount
   const zazaiAmount = pricePerUnit * zazaiUnits;
   const karamAmount = pricePerUnit * karamUnits;
   const muhibAmount = pricePerUnit * muhibUnits;
@@ -248,19 +231,16 @@ addCardBtn.addEventListener("click", (e) => {
     month: inputMonth.value,
     amount: inputAmount.value,
 
-    // All Units = input value
     zazaiAllUnits: zazaiAllUnits,
     karamAllUnits: karamAllUnits,
     muhibAllUnits: muhibAllUnits,
     jawadAllUnits: jawadAllUnits,
 
-    // Units = All Units - previous All Units
     zazaiUnits: zazaiUnits,
     karamUnits: karamUnits,
     muhibUnits: muhibUnits,
     jawadUnits: jawadUnits,
 
-    // Amount
     zazaiAmount: zazaiAmount.toFixed(2),
     karamAmount: karamAmount.toFixed(2),
     muhibAmount: muhibAmount.toFixed(2),
@@ -598,7 +578,6 @@ backupBtns.forEach((backupBtn) => {
 
     URL.revokeObjectURL(url);
 
-    // Close mobile menu
     mobileMenu.classList.add("hidden");
   });
 });
@@ -624,13 +603,11 @@ restoreFile.addEventListener("change", (event) => {
     try {
       const restoredBills = JSON.parse(e.target.result);
 
-      // Check if backup is an array
       if (!Array.isArray(restoredBills)) {
         alert("Invalid backup file.");
         return;
       }
 
-      // Check if the array contains valid bill objects
       const isValidBackup = restoredBills.every((bill) => {
         return (
           bill &&
@@ -672,13 +649,10 @@ cardsContainer.addEventListener("click", (e) => {
 
   if (!deleteBtn) return;
 
-  // Remember which card we want to delete
   deleteCard = deleteBtn.closest(".card");
 
-  // Change modal text
   passwordMessage.textContent = "Enter the password to delete this bill.";
 
-  // Open password modal
   passwordModal.classList.remove("opacity-0", "invisible");
   passwordModal.classList.add("opacity-100", "visible");
 
